@@ -1,0 +1,45 @@
+##
+# General Ignore
+##
+
+/.envrc
+
+# Docker Storage
+.docker/
+
+##
+# Common
+##
+
+vendor/
+build/
+dist/
+
+*.gz
+*.bak
+*.log
+*.tar
+*.tmp
+*.tgz
+*.zip
+
+##
+# OS Files
+##
+
+# Mac OS
+.DS_Store
+._*
+.Trashes/
+
+# Linux
+*~
+*.swp
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# .gitignore
