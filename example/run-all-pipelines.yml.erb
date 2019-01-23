@@ -1,0 +1,53 @@
+---
+resource_types:
+- name: concourse-job
+  type: docker-image
+  source:
+    repository: mcareysolstice/concourse-job-resource
+    tag: x
+
+- name: dummy
+  type: docker-image
+  source:
+    repository: mrsixw/concourse_dummy_resource
+    tag: latest
+
+resources:
+- name: dummy
+  type: dummy
+
+<% [1,2,3].each do |i| %>
+<% [1,3].each do |j| %>
+<% if i == 3 and j == 3
+    next
+   end %>
+- name: pipeline-<%= i %>-step<%= j %>
+  type: concourse-job
+  source:
+    concourse_url: http://concourse-web:8080
+    team_name: main
+    username: test
+    password: test
+    pipeline: pipeline-<%= i %>
+    job: step<%= j %>
+    status: succeeded
+<% end %>
+<% end %>
+
+<% prev_job = nil %>
+jobs:
+<% [1,2,3].each do |i| %>
+- name: run-pipeline-<%= i %>
+  plan:
+  - aggregate:
+    - get: dummy
+<% if i != 1 %>
+      passed:
+      - run-pipeline-<%= i - 1 %>
+    - get: pipeline-<%= i - 1 %>-step3
+      params:
+        skip_download: true
+      trigger: true
+<% end %>
+  - put: pipeline-<%= i %>-step1
+<% end %>

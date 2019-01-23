@@ -1,0 +1,13 @@
+###
+# Package information
+##
+
+REPOSITORY = https://github.com/mcarey-solstice/concourse-job-resource
+AUTHOR = Mike Carey <mcarey@solstice.com>
+
+APP_NAME = concourse-job-resource
+VERSION = 1.0.0
+
+REQUIREMENTS = docker bash jq fly
+
+# package-info

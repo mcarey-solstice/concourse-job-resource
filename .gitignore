@@ -2,6 +2,7 @@
 # General Ignore
 ##
 
+/.env
 /.envrc
 
 # Docker Storage

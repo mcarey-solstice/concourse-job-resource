@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"/common.sh
+
+output=$1
+
+declare -a keys=(id name team_name name status job_name api_url pipeline_name start_time end_time)
+
+skip_download=$( cat $payload | jq -r '.params.skip_download // false' )
+
+if [[ $skip_download == true ]]; then
+  debug "Skipping download for: $pipeline/$job"
+else
+  debug "Pulling build for: $pipeline/$job"
+  for key in ${keys[@]}; do
+    cat $payload | jq -r ".version.$key" > $output/$key
+  done
+fi

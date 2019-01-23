@@ -1,0 +1,32 @@
+---
+resources:
+- name: dummy
+  type: time
+  source: {interval: 24000h} # ideally this could be disabled
+
+jobs:
+<% [1,2,3].each do |i| %>
+- name: step<%= i %>
+  plan:
+  - get: dummy
+  <% if i != 1 %>
+    passed: [step<%= i - 1 %>]
+    trigger: true
+  <% end %>
+  - task: run-step<%= i %>
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: alpine
+      params:
+        message: pipeline-<%= index %>-step<%= i %>
+      run:
+        path: sh
+        args:
+          - -c
+          - |
+            echo "$message"
+  - put: dummy
+<% end %>
