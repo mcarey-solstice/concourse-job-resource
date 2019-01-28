@@ -13,6 +13,6 @@ RUN wget -O /usr/local/bin/fly https://github.com/concourse/fly/releases/downloa
 
 RUN mkdir -p /opt/resource
 
-COPY ./assets/* /opt/resource
+COPY ./assets/* /opt/resource/
 
 # docker build -t mcareysolstice/concourse-job-resource .
