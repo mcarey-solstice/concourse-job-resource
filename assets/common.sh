@@ -70,7 +70,7 @@ insecure=$( cat $payload | jq -r '.source.insecure' )
 target=$( cat $payload | jq -r '.source.target // "'"${ATC_EXTERNAL_URL}"'"' )
 username=$( cat $payload | jq -r '.source.username // ""' )
 password=$( cat $payload | jq -r '.source.password // ""' )
-team_name=$( cat $payload | jq -r '.source.team_name // ""' )
+team=$( cat $payload | jq -r '.source.team // ""' )
 pipeline=$( cat $payload | jq -r '.source.pipeline' )
 job=$( cat $payload | jq -r '.source.job' )
 status=$( cat $payload | jq -r '.source.status // ""' )
@@ -112,9 +112,9 @@ if [[ -n $username ]]; then
   debug "Adding auth"
   auth_options="-u $username -p $(printf '%q' "${password:-}")"
 fi
-if [[ -n $team_name ]]; then
+if [[ -n $team ]]; then
   debug "Adding team"
-  auth_options="$auth_options -n $team_name"
+  auth_options="$auth_options -n $team"
 fi
 
 # Log in
