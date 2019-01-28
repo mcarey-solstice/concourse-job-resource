@@ -78,8 +78,8 @@ if [[ -z $target ]]; then
   exit 1
 fi
 
-if [[ ${skip_ssl_validation} == 'true' && -s "${ca_cert}" ]]; then
-  error "Cannot specify both skip_ssl_validation and ca_cert" >&2
+if [[ ${insecure} == 'true' && -s "${ca_cert}" ]]; then
+  error "Cannot specify both insecure and ca_cert" >&2
   exit 1
 fi
 
