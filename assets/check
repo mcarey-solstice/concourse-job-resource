@@ -13,4 +13,4 @@ if [[ -n $status ]]; then
 fi
 
 debug $debug_str
-fly -t "$target" builds -j $pipeline/$job --json | jq -r "$jq_filter" | jq -s
+fly -t "$target" builds -j $pipeline/$job --json | jq -rn "$jq_filter" | jq -s
