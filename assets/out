@@ -2,8 +2,17 @@
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"/common.sh
 
-last_build=$(cat $payload | jq -r .version.name)
+last_build=$(cat $payload | jq -r '.version.name')
 info "Last known build: $last_build"
 
 info "Triggering pipeline job: $pipeline/$job"
 fly -t "$target" trigger-job -j $pipeline/$job
+
+info "Collecting information on build"
+fly -t "$target" builds -j $pipeline/$job --json | jq -r '.[0] | with_entries({
+  "key": .key,
+  "value": (.value | tostring)
+}) | {
+  "version": .,
+  "metadata": (. | to_entries | map({"name": .key, "value": .value}))
+}' >&3

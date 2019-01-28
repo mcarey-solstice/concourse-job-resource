@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+shopt -s expand_aliases
+
+exec 3>&1
+exec 1>&2
+
 __LOG_COLOR_DEBUG__=$'\e[92m'
 __LOG_COLOR_INFO__=$'\e[93m'
 __LOG_COLOR_ERROR__=$'\e[91m'
@@ -48,8 +53,6 @@ function log() {
   echo -e "[${!color}${LEVEL}${!reset}] ${@}" >&2
 
 }
-
-shopt -s expand_aliases
 
 alias debug='log debug'
 alias info='log info'
@@ -121,5 +124,3 @@ fly -t "$target" login $ssl_options -c "$target" $auth_options
 
 info "Syncing..."
 fly -t "$target" sync
-
-#

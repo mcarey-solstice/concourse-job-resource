@@ -16,3 +16,11 @@ else
     cat $payload | jq -r ".version.$key" > $output/$key
   done
 fi
+
+cat $payload | jq -r '.version | with_entries({
+  "key": .key,
+  "value": (.value | tostring)
+}) | {
+  "version": .,
+  "metadata": (. | to_entries | map({"name": .key, "value": .value}))
+}' >&3

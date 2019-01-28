@@ -6,11 +6,13 @@ since=$(cat $payload | jq -r '.version.start_time // 0')
 
 debug_str="Finding builds for job: $pipeline/$job"
 
-jq_filter=". | reverse | .[] | select(.start_time > $since)"
+jq_filter=". | reverse | .[] | select((.start_time | tonumber) > $since)"
 if [[ -n $status ]]; then
   debug_str+=" with status: $status"
   jq_filter+=' | select(.status == "'"$status"'")'
 fi
 
 debug $debug_str
-fly -t "$target" builds -j $pipeline/$job --json | jq -rn "$jq_filter" | jq -s
+fly -t "$target" builds -j $pipeline/$job --json |
+  jq -r "$jq_filter | with_entries({\"key\": .key, \"value\": (.value | tostring)})" |
+  jq -s . >&3
