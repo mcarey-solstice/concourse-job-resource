@@ -3,6 +3,7 @@
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"/common.sh
 
 since=$(cat $payload | jq -r '.version.start_time // 0')
+[[ "$since" == "0" ]] && since=$not_before_date
 
 debug_str="Finding builds for job: $pipeline/$job"
 
@@ -12,7 +13,10 @@ if [[ -n $status ]]; then
   jq_filter+=' | select(.status == "'"$status"'")'
 fi
 
+# The first request will have no 'version', so we should only return the current version of the resource.
+[[ "$since" == "0" ]] && ccount=1 || count=50
+
 debug $debug_str
-fly -t "$target" builds -j $pipeline/$job --json |
+fly -t "$target" builds -j $pipeline/$job -c $count --json |
   jq -r "$jq_filter | with_entries({\"key\": .key, \"value\": (.value | tostring)})" |
   jq -s . >&3

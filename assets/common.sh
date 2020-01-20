@@ -74,6 +74,10 @@ team=$( cat $payload | jq -r '.source.team // ""' )
 pipeline=$( cat $payload | jq -r '.source.pipeline' )
 job=$( cat $payload | jq -r '.source.job' )
 status=$( cat $payload | jq -r '.source.status // ""' )
+not_before_date=$( cat $payload | jq -r '.source.not_before_date // 0' )
+
+# Convert to epoch date
+[[ "$not_before_date" != "0" ]] && not_before_date=$(date -d "$not_before_date" +"%s")
 
 # Validation
 if [[ -z $target ]]; then

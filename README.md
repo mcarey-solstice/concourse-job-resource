@@ -37,6 +37,7 @@ resources:
     pipeline: my-pipeline
     job: my-job
     status: succeeded
+    not_before_date: "Dec 4 2019 7:00:00 AM"
 ```
 
 * `target`: *Optional.* URL of your concourse instance e.g. `https://my-concourse.com`.
@@ -55,6 +56,9 @@ resources:
 
 * `password`: Basic auth password for logging in to the team.
   If this and `username` are blank, team must have no authentication configured.
+
+* `not_before_date`: Any date string that bash can understand.
+  If given, then builds executed prior to `not_before_date` will be excluded from the initial resource check.
 
 ## `in`: Get the configuration of the pipelines
 
